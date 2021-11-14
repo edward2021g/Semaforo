@@ -620,15 +620,7 @@ namespace Semaforo
             Vehiculo1(pct_vehiculo1.Left, pct_vehiculo1.Top);
         }
         //-------
-        /*
-        private void btn_mover_Click(object sender, EventArgs e)
-        {
-            System.Timers.Timer miTimer = new System.Timers.Timer();
-            miTimer.Elapsed += new System.Timers.ElapsedEventHandler(eventoTimer);
-            miTimer.Interval = 100;
-            miTimer.Enabled = true;
-            GC.KeepAlive(miTimer);
-        }*/
+
         
         private void eventoTimer(object sender, System.Timers.ElapsedEventArgs e)
         {
