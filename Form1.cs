@@ -22,13 +22,13 @@ namespace Semaforo
 
         const double TIMEOUT = 5000; // milliseconds
 
-        //Timers de los vehiculos
-        System.Timers.Timer timer_vehiculo1 = new System.Timers.Timer();
-        System.Timers.Timer timer_vehiculo2 = new System.Timers.Timer();
-        //
+        //ticks de los vehiculos
+        private int int_ticks_v1 = 0;
+        private int int_ticks_v2 = 0;
 
         //varable para pausar y reanudar el timer correcto
         string timer_actual = "";
+        string timer_vehiculo_actual = "";
         public Form1()
         {
             InitializeComponent();
@@ -36,59 +36,33 @@ namespace Semaforo
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            pct_semaforo1.Image = Semaforo.Properties.Resources.apagado;
-            pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
-            pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
-            pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
+            ApagarTodosSemaforos();
             btn_apagar.Enabled = false;
             btn_parar.Enabled = false;
-            lbl_contador.ForeColor = Color.Black;
-
-            //giro los semaforos laterales 90 grados
-            pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-            pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-            pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
+            OrientarTodosSemaforos();
         }
 
         private void btn_iniciar_Click(object sender, EventArgs e)
         {
-            //MoverVehiculo();
-
             btn_iniciar.Enabled = false;
             btn_parar.Enabled = true;
             btn_apagar.Enabled = true;
 
             pct_semaforo3.Image = Semaforo.Properties.Resources.rojo;
             pct_semaforo4.Image = Semaforo.Properties.Resources.rojo;
-
-            //giro los semaforos laterales 90 grados
-            pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-            pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-
-            // Descripcion de los pasos secuenciales:
-
-            // Paso 1: Contar hasta 10 segundos y medio con verde estatico y se apaga el 10 medio segundo.
+            pct_semaforo1.Image = Semaforo.Properties.Resources.verde;
+            pct_semaforo2.Image = Semaforo.Properties.Resources.verde;
+            OrientarTodosSemaforos();
 
             lbl_contador.ForeColor = Color.Green; //empieza en verde
             lbl_contador.Text = "1";
-
-            pct_semaforo1.Image = Semaforo.Properties.Resources.verde;
-            pct_semaforo2.Image = Semaforo.Properties.Resources.verde;
-            pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
             timer_verde.Start();
-            //bln_primer_ciclo = false;
-
-            // Paso 2: prender el 1, apagar el 1, 2 y 3 (verde parpadeante)
-            // paso 3: Prender el amarillo por 2.5 segundos. POner 1, apagarlo, 2 y apagrlo, 3 y aparglo segundos apagarlo
-            // paso 4: Contar 2 segundos con el rojo, apagrlo y empezar el ciclo con los otros contadores
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             if(bln_primer_ciclo == true)
-            {
-                //pct_vehiculo1.Location = new System.Drawing.Point(594, 575);
-                
+            { 
                 if (int_ticks == 0)
                 {
                     int_ticks = 1;
@@ -103,10 +77,8 @@ namespace Semaforo
                 lbl_contador.Text = int_numero.ToString(); //muestra los segundos
 
                 ++int_ticks; //cuenta cada medio segundo 2 ticks = 1 seg
-                this.Text = int_ticks.ToString(); //muestra los ticks
 
-                // ----------- apaga y prende por 3 segundos y medio en verde --
-                if (int_ticks == 20) //en 9.5 seg
+                if (int_ticks == 20)
                 {
                     pct_semaforo1.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
@@ -117,9 +89,6 @@ namespace Semaforo
                     int_ticks = 0;
                     timer_verde_parpadeante.Start();
 
-                    //cambia posicion del primer vbehiculo al inicio
-                    //pct_vehiculo1.Location = new System.Drawing.Point(594, 575);
-                    //timer_vehiculo1.Stop();
                     MoverVehiculo(1);
                 }
             }
@@ -130,20 +99,21 @@ namespace Semaforo
                     int_ticks = 1;
                 }
 
+                if (int_ticks == 1)
+                {
+                    MoverVehiculo(2);
+                }
+
                 int_numero = (int_ticks / 2) + 1;
                 lbl_contador.Text = int_numero.ToString(); //muestra los segundos
 
                 ++int_ticks; //cuenta cada medio segundo 2 ticks = 1 seg
-                //this.Text = int_ticks.ToString(); //muestra los ticks
 
-                // ----------- apaga y prende por 3 segundos y medio en verde --
-                if (int_ticks == 20) //en 9.5 seg
+                if (int_ticks == 20)
                 {
                     pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                    OreintarSemaforosLaterales();
 
                     lbl_contador.ForeColor = Color.Gray;
                     int_numero = 0;
@@ -157,7 +127,6 @@ namespace Semaforo
 
         private void btn_parar_Click(object sender, EventArgs e)
         {
-            
             if (btn_parar.Text == "PARAR")
             {
                 if (timer_verde.Enabled == true)
@@ -181,11 +150,16 @@ namespace Semaforo
                     timer_actual = "timer_rojo";
                 }
                 //timers de los vehiculos
-                if (timer_vehiculo1.Enabled == true)
+                if (timer_v1.Enabled == true)
                 {
-                    timer_vehiculo1.Enabled = false;
+                    timer_v1.Enabled = false;
+                    timer_vehiculo_actual = "1";
                 }
-
+                if (timer_v2.Enabled == true)
+                {
+                    timer_v2.Enabled = false;
+                    timer_vehiculo_actual = "2";
+                }
                 btn_parar.Text = "REANUDAR";
                 pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
             }
@@ -205,13 +179,14 @@ namespace Semaforo
                             timer_rojo.Enabled = true;
                             break;
                     }
-
                     //timers de los vehiculos
-                    if (timer_vehiculo1.Enabled == false)
+                    switch (timer_vehiculo_actual)
                     {
-                        timer_vehiculo1.Enabled = true;
+                        case "1": timer_v1.Enabled = true;
+                            break;
+                        case "2": timer_v2.Enabled = true;
+                            break;
                     }
-
                     btn_parar.Text = "PARAR";
                     pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
                 }
@@ -220,54 +195,26 @@ namespace Semaforo
 
         private void btn_apagar_Click(object sender, EventArgs e)
         {
-            
             btn_parar.Enabled = false;
             btn_apagar.Enabled = false;
             btn_iniciar.Enabled = true;
             btn_Preventivas.Enabled = true;
-
             lbl_contador.Text = "0";
-            lbl_contador.ForeColor = Color.Black;
+            lbl_contador.ForeColor = Color.Gray;
             btn_parar.Text = "PARAR";
-
-            //reinicio las variables
-            int_tick_verde_parpadeante = 1;
-            int_ticks = 1;
-            int_tick_amarillo = 1;
-            int_tick_rojo = 1;
             bln_primer_ciclo = true;
-
-            //detengo los timers
-            timer_verde.Stop();
-            timer_preventivas.Stop();
-            timer_verde_parpadeante.Stop();
-            timer_amarillo.Stop();
-            timer_rojo.Stop();
-
-
-            pct_semaforo1.Image = Semaforo.Properties.Resources.apagado;
-            pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
-            pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
-            pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
-
-            //giro los semaforos laterales 90 grados
-            pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-            pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-            pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
+            ReinicarVariables();
+            DetenerTimers();
+            ApagarTodosSemaforos();
+            OrientarTodosSemaforos();
+            pct_vehiculo1.Location = new System.Drawing.Point(594, 575); //coloco los vehiculos en su posicion de inicio
+            pct_vehiculo2.Location = new System.Drawing.Point(-87, 313);
         }
 
         private void btn_Preventivas_Click(object sender, EventArgs e)
         {
-            //detengo los timers
-            timer_verde.Stop();
-            timer_verde_parpadeante.Stop();
-            timer_amarillo.Stop();
-
-            //reinicio las variables
-            int_tick_verde_parpadeante = 1;
-            int_ticks = 1;
-            int_tick_amarillo = 1;
-
+            DetenerTimers();
+            ReinicarVariables();
             btn_parar.Enabled = false;
             btn_apagar.Enabled = true;
             btn_iniciar.Enabled = false;
@@ -275,6 +222,8 @@ namespace Semaforo
             lbl_contador.ForeColor = Color.Gray;
             btn_parar.Text = "PARAR";
             timer_preventivas.Start();
+            pct_vehiculo1.Location = new System.Drawing.Point(594, 575); //coloco los vehiculos en su posicion de inicio
+            pct_vehiculo2.Location = new System.Drawing.Point(-87, 313);
         }
 
         private void timer_preventivas_Tick(object sender, EventArgs e)
@@ -298,21 +247,11 @@ namespace Semaforo
             else
             {
                 lbl_contador.ForeColor = Color.Gray;
-                pct_semaforo1.Image = Semaforo.Properties.Resources.apagado;
-                pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
-                pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
-                pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
+                ApagarTodosSemaforos();
                 OrientarTodosSemaforos();
             }
         }
 
-        private void OrientarTodosSemaforos()
-        {
-            //giro los semaforos laterales 90 grados
-            pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-            pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-            pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
-        }
         private void timer_verde_parpadeante_Tick(object sender, EventArgs e)
         {
             int_tick_verde_parpadeante++; //cuenta cada segundo 2 ticks = 1 seg
@@ -357,18 +296,14 @@ namespace Semaforo
                     lbl_contador.ForeColor = Color.Gray;
                     pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                    OreintarSemaforosLaterales();
                 }
                 else
                 {
                     lbl_contador.ForeColor = Color.Green;
                     pct_semaforo3.Image = Semaforo.Properties.Resources.verde;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.verde;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                    OreintarSemaforosLaterales();
                 }
 
                 if (int_tick_verde_parpadeante == 7) //se muestra el 3 apagado
@@ -408,7 +343,6 @@ namespace Semaforo
                     pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
                     timer_amarillo.Stop();
-
                     int_tick_amarillo = 1;
                     timer_rojo.Start();
                 }
@@ -417,20 +351,15 @@ namespace Semaforo
             {
                 pct_semaforo3.Image = Semaforo.Properties.Resources.amarillo;
                 pct_semaforo4.Image = Semaforo.Properties.Resources.amarillo;
-                //giro los semaforos laterales 90 grados
-                pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                OreintarSemaforosLaterales();
 
                 if (int_tick_amarillo == 7) //se muestra el 3 apagado
                 {
                     lbl_contador.ForeColor = Color.Gray;
                     pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                    OreintarSemaforosLaterales();
                     timer_amarillo.Stop();
-
                     int_tick_amarillo = 1;
                     timer_rojo.Start();
                 }
@@ -459,7 +388,6 @@ namespace Semaforo
                 pct_semaforo2.Image = Semaforo.Properties.Resources.rojo;
                 pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
 
-                //Actualizacion 10/nov/2021
                 if(int_tick_rojo == 5)
                 {
                     lbl_contador.ForeColor = Color.Gray;
@@ -467,15 +395,12 @@ namespace Semaforo
                     pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
                 }
-                //10/nov/2021
                 
                 if (int_tick_rojo == 6) //se muestra el 2 apagado
                 {
                     int_tick_rojo = 1;
                     timer_rojo.Stop();
-
                     bln_primer_ciclo = false;
-
                     timer_verde.Start();
                     lbl_contador.Text = "1";
                     lbl_contador.ForeColor = Color.Green;
@@ -483,21 +408,16 @@ namespace Semaforo
                     //cambiar a los semaforos 3 y 4 a verde y pongo en rojo los 1y 2
                     pct_semaforo3.Image = Semaforo.Properties.Resources.verde;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.verde;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
                     pct_semaforo1.Image = Semaforo.Properties.Resources.rojo;
                     pct_semaforo2.Image = Semaforo.Properties.Resources.rojo;
-                    pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
+                    OrientarTodosSemaforos();
                 }
             }
             else
             {
                 pct_semaforo3.Image = Semaforo.Properties.Resources.rojo;
                 pct_semaforo4.Image = Semaforo.Properties.Resources.rojo;
-                //giro los semaforos laterales 90 grados
-                pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                OreintarSemaforosLaterales();
 
                 //Actualizacion 10/nov/2021
                 if (int_tick_rojo == 5)
@@ -505,45 +425,25 @@ namespace Semaforo
                     lbl_contador.ForeColor = Color.Gray;
                     pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+                    OreintarSemaforosLaterales();
                 }
                 //10/nov/2021
 
                 if (int_tick_rojo == 6)
                 {
-                    //comentado 10/nov/2021
-                    /*
-                    lbl_contador.ForeColor = Color.Gray;
-                    pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
-                    pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
-                    */
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
-                    //pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
-
                     int_tick_rojo = 1;
                     timer_rojo.Stop();
-
                     bln_primer_ciclo = true;
-
-                    //int_ticks = 1;
                     timer_verde.Start();
                     lbl_contador.Text = "1";
                     lbl_contador.ForeColor = Color.Green;
-                    
 
                     //cambiar a los semaforos 3 y 4 a verde y pongo en rojo los 1y 2
                     pct_semaforo3.Image = Semaforo.Properties.Resources.rojo;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.rojo;
-                    //giro los semaforos laterales 90 grados
-                    pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
-                    pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
                     pct_semaforo1.Image = Semaforo.Properties.Resources.verde;
                     pct_semaforo2.Image = Semaforo.Properties.Resources.verde;
-                    pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
+                    OrientarTodosSemaforos();
                 }
             }
         }
@@ -551,78 +451,75 @@ namespace Semaforo
         //segunda version del metodo para mover el vehiculo
         private void MoverVehiculo(int numero)
         {
-
-        }
-
-        /*
-        // Movimiento del vehiculo1
-        private void MoverVehiculo(int numero)
-        {
-            //System.Timers.Timer timer_vehiculo1 = new System.Timers.Timer();
-            pct_vehiculo1.Location = new System.Drawing.Point(594, 575);
-            //timer_vehiculo1.Stop();
-            //timer_vehiculo2.Stop();
-            if (numero == 1)
+            if(numero == 1)
             {
-                timer_vehiculo1.Stop();
-                timer_vehiculo1.Elapsed += new System.Timers.ElapsedEventHandler(eventoTimerVehiculo1);
-                timer_vehiculo1.Interval = 100;
-                timer_vehiculo1.Enabled = true;
-                GC.KeepAlive(timer_vehiculo1);
+                pct_vehiculo1.Location = new System.Drawing.Point(594, 575);
+                timer_v1.Start();
             }
-            else
+            if (numero == 2)
             {
-                timer_vehiculo1.Stop();
-                timer_vehiculo2.Elapsed += new System.Timers.ElapsedEventHandler(eventoTimerVehiculo2);
-                timer_vehiculo2.Interval = 100;
-                timer_vehiculo2.Enabled = true;
-                GC.KeepAlive(timer_vehiculo1);
-            }
-
-        }
-
-        private void eventoTimerVehiculo1(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            CheckForIllegalCrossThreadCalls = false;
-            Vehiculo1y2(pct_vehiculo1.Left, pct_vehiculo1.Top);
-        }
-
-        private void eventoTimerVehiculo2(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            CheckForIllegalCrossThreadCalls = false;
-            Vehiculo1y2(pct_vehiculo1.Left, pct_vehiculo1.Top);
-        }
-
-        private void Vehiculo1y2(int x, int y)
-        {
-            pct_vehiculo1.Top = y - 10;
-
-        }
-        //-------
-
-
-        private void eventoTimer(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            //CheckForIllegalCrossThreadCalls = false;
-            //moveImage(pct_vehiculo1.Left, pct_vehiculo1.Top);
-            //pct_vehiculo1.Top = (pct_vehiculo1.Top) - 10;
-            pct_vehiculo1.Top -= 10;
-        }
-
-        private void moveImage(int x, int y)
-        {
-            /*
-            if (y < this.Height - pct_vehiculo1.Height)
-            {
-                //pct_vehiculo1.Left = x + 20;
-                pct_vehiculo1.Top = y - 10;
-            }
-
-            else if (x < this.Width - pct_vehiculo1.Width)
-            {
-                pct_vehiculo1.Left = x + 20;
+                pct_vehiculo2.Location = new System.Drawing.Point(-87, 313);
+                timer_v2.Start();
             }
         }
-        */
+
+        private void timer_v1_Tick(object sender, EventArgs e)
+        {
+            int_ticks_v1++;
+            pct_vehiculo1.Top = pct_vehiculo1.Top - 10;
+        }
+
+        private void timer_v2_Tick(object sender, EventArgs e)
+        {
+            int_ticks_v2++;
+            pct_vehiculo2.Left = pct_vehiculo2.Left + 10;
+        }
+
+        private void OrientarTodosSemaforos()
+        {
+            //giro los semaforos laterales 90 grados
+            pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
+            pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+            pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
+        }
+
+        private void ApagarTodosSemaforos()
+        {
+            pct_semaforo1.Image = Semaforo.Properties.Resources.apagado;
+            pct_semaforo2.Image = Semaforo.Properties.Resources.apagado;
+            pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
+            pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
+        }
+
+        private void OreintarSemaforosLaterales()
+        {
+            //giro los semaforos laterales 90 grados
+            pct_semaforo3.Image.RotateFlip(RotateFlipType.Rotate90FlipY);
+            pct_semaforo4.Image.RotateFlip(RotateFlipType.Rotate90FlipX);
+        }
+        private void DetenerTimers()
+        {
+            //detengo los timers
+            timer_verde.Stop();
+            timer_preventivas.Stop();
+            timer_verde_parpadeante.Stop();
+            timer_amarillo.Stop();
+            timer_rojo.Stop();
+            timer_v1.Stop();
+            timer_v2.Stop();
+        }
+
+        private void ReinicarVariables()
+        {
+            int_tick_verde_parpadeante = 1;
+            int_ticks = 1;
+            int_tick_amarillo = 1;
+            int_tick_rojo = 1;
+            int_ticks_v1 = 0;
+            int_ticks_v2 = 0;
+            timer_actual = "";
+            timer_vehiculo_actual = "";
+            int_tick_preventivas = 0;
+        }
     }
 }

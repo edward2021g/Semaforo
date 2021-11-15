@@ -49,6 +49,8 @@ namespace Semaforo
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pct_vehiculo1 = new System.Windows.Forms.PictureBox();
             this.pct_vehiculo2 = new System.Windows.Forms.PictureBox();
+            this.timer_v1 = new System.Windows.Forms.Timer(this.components);
+            this.timer_v2 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pct_semaforo1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pct_semaforo2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pct_semaforo3)).BeginInit();
@@ -232,12 +234,20 @@ namespace Semaforo
             // 
             this.pct_vehiculo2.BackColor = System.Drawing.Color.Transparent;
             this.pct_vehiculo2.Image = ((System.Drawing.Image)(resources.GetObject("pct_vehiculo2.Image")));
-            this.pct_vehiculo2.Location = new System.Drawing.Point(328, 177);
+            this.pct_vehiculo2.Location = new System.Drawing.Point(-87, 313);
             this.pct_vehiculo2.Name = "pct_vehiculo2";
-            this.pct_vehiculo2.Size = new System.Drawing.Size(36, 90);
+            this.pct_vehiculo2.Size = new System.Drawing.Size(90, 36);
             this.pct_vehiculo2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pct_vehiculo2.TabIndex = 8;
             this.pct_vehiculo2.TabStop = false;
+            // 
+            // timer_v1
+            // 
+            this.timer_v1.Tick += new System.EventHandler(this.timer_v1_Tick);
+            // 
+            // timer_v2
+            // 
+            this.timer_v2.Tick += new System.EventHandler(this.timer_v2_Tick);
             // 
             // Form1
             // 
@@ -292,6 +302,8 @@ namespace Semaforo
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pct_vehiculo1;
         private System.Windows.Forms.PictureBox pct_vehiculo2;
+        private System.Windows.Forms.Timer timer_v1;
+        private System.Windows.Forms.Timer timer_v2;
     }
 }
 
