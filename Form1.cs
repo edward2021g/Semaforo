@@ -20,15 +20,12 @@ namespace Semaforo
         private int int_tick_rojo = 1;
         bool bln_primer_ciclo = true;
 
-        const double TIMEOUT = 5000; // milliseconds
-
         //ticks de los vehiculos
         private int int_ticks_v1 = 0;
         private int int_ticks_v2 = 0;
 
         //varable para pausar y reanudar el timer correcto
         string timer_actual = "";
-        string timer_vehiculo_actual = "";
         public Form1()
         {
             InitializeComponent();
@@ -63,21 +60,11 @@ namespace Semaforo
         {
             if(bln_primer_ciclo == true)
             { 
-                if (int_ticks == 0)
-                {
-                    int_ticks = 1;
-                }
-
-                if (int_ticks == 1)
-                {
-                    MoverVehiculo(1);
-                }
-
+                if (int_ticks == 0){int_ticks = 1;}
+                if (int_ticks == 1){ MoverVehiculo(1);}
                 int_numero = (int_ticks / 2) + 1;
                 lbl_contador.Text = int_numero.ToString(); //muestra los segundos
-
                 ++int_ticks; //cuenta cada medio segundo 2 ticks = 1 seg
-
                 if (int_ticks == 20)
                 {
                     pct_semaforo1.Image = Semaforo.Properties.Resources.apagado;
@@ -88,33 +75,21 @@ namespace Semaforo
                     timer_verde.Stop();
                     int_ticks = 0;
                     timer_verde_parpadeante.Start();
-
                     MoverVehiculo(1);
                 }
             }
             else
             {
-                if (int_ticks == 0)
-                {
-                    int_ticks = 1;
-                }
-
-                if (int_ticks == 1)
-                {
-                    MoverVehiculo(2);
-                }
-
+                if (int_ticks == 0){ int_ticks = 1;}
+                if (int_ticks == 1){ MoverVehiculo(2);}
                 int_numero = (int_ticks / 2) + 1;
                 lbl_contador.Text = int_numero.ToString(); //muestra los segundos
-
                 ++int_ticks; //cuenta cada medio segundo 2 ticks = 1 seg
-
                 if (int_ticks == 20)
                 {
                     pct_semaforo3.Image = Semaforo.Properties.Resources.apagado;
                     pct_semaforo4.Image = Semaforo.Properties.Resources.apagado;
                     OreintarSemaforosLaterales();
-
                     lbl_contador.ForeColor = Color.Gray;
                     int_numero = 0;
                     timer_verde.Stop();
@@ -122,7 +97,6 @@ namespace Semaforo
                     timer_verde_parpadeante.Start();
                 }
             }
-
         }
 
         private void btn_parar_Click(object sender, EventArgs e)
@@ -149,19 +123,15 @@ namespace Semaforo
                     timer_rojo.Enabled = false;
                     timer_actual = "timer_rojo";
                 }
-                //timers de los vehiculos
-                if (timer_v1.Enabled == true)
+                if (bln_primer_ciclo == true)//timers de los vehiculos
                 {
                     timer_v1.Enabled = false;
-                    timer_vehiculo_actual = "1";
                 }
-                if (timer_v2.Enabled == true)
+                else
                 {
                     timer_v2.Enabled = false;
-                    timer_vehiculo_actual = "2";
                 }
                 btn_parar.Text = "REANUDAR";
-                pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
             }
             else
             {
@@ -179,16 +149,15 @@ namespace Semaforo
                             timer_rojo.Enabled = true;
                             break;
                     }
-                    //timers de los vehiculos
-                    switch (timer_vehiculo_actual)
+                    if(bln_primer_ciclo == true)//timers de los vehiculos
                     {
-                        case "1": timer_v1.Enabled = true;
-                            break;
-                        case "2": timer_v2.Enabled = true;
-                            break;
+                        timer_v1.Enabled = true;
+                    }
+                    else
+                    {
+                        timer_v2.Enabled = true;
                     }
                     btn_parar.Text = "PARAR";
-                    pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
                 }
             }
         }
@@ -318,24 +287,16 @@ namespace Semaforo
         private void timer_amarillo_Tick(object sender, EventArgs e)
         {
             int_tick_amarillo++; //cuenta cada segundo 2 ticks = 1 seg
-
-            if (int_tick_amarillo == 1) //se muestra el 3 apagado
-            {
-                lbl_contador.Text = "1";
-            }
-            else
-            {
-                lbl_contador.Text = ((int_tick_amarillo / 2)).ToString(); //muestra los segundos
-            }
+            if (int_tick_amarillo == 1) 
+            { lbl_contador.Text = "1";}
+            else { lbl_contador.Text = ((int_tick_amarillo / 2)).ToString(); } //muestra los segundos
 
             lbl_contador.ForeColor = Color.FromArgb(255, 219, 43);
-
             if (bln_primer_ciclo == true)
             {
                 pct_semaforo1.Image = Semaforo.Properties.Resources.amarillo;
                 pct_semaforo2.Image = Semaforo.Properties.Resources.amarillo;
                 pct_semaforo2.Image.RotateFlip(RotateFlipType.Rotate180FlipX); //gira el semaforo 2 a 180 grados
-
                 if (int_tick_amarillo == 7) //se muestra el 3 apagado
                 {
                     lbl_contador.ForeColor = Color.Gray;
@@ -352,7 +313,6 @@ namespace Semaforo
                 pct_semaforo3.Image = Semaforo.Properties.Resources.amarillo;
                 pct_semaforo4.Image = Semaforo.Properties.Resources.amarillo;
                 OreintarSemaforosLaterales();
-
                 if (int_tick_amarillo == 7) //se muestra el 3 apagado
                 {
                     lbl_contador.ForeColor = Color.Gray;
@@ -364,7 +324,6 @@ namespace Semaforo
                     timer_rojo.Start();
                 }
             }
-            
         }
 
         private void timer_rojo_Tick(object sender, EventArgs e)
@@ -518,7 +477,6 @@ namespace Semaforo
             int_ticks_v1 = 0;
             int_ticks_v2 = 0;
             timer_actual = "";
-            timer_vehiculo_actual = "";
             int_tick_preventivas = 0;
         }
     }
