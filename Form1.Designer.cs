@@ -40,7 +40,7 @@ namespace Semaforo
             this.btn_apagar = new System.Windows.Forms.Button();
             this.btn_parar = new System.Windows.Forms.Button();
             this.btn_iniciar = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timer_verde = new System.Windows.Forms.Timer(this.components);
             this.lbl_contador = new System.Windows.Forms.Label();
             this.timer_preventivas = new System.Windows.Forms.Timer(this.components);
             this.timer_verde_parpadeante = new System.Windows.Forms.Timer(this.components);
@@ -48,6 +48,7 @@ namespace Semaforo
             this.timer_rojo = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pct_vehiculo1 = new System.Windows.Forms.PictureBox();
+            this.pct_vehiculo2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pct_semaforo1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pct_semaforo2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pct_semaforo3)).BeginInit();
@@ -55,6 +56,7 @@ namespace Semaforo
             this.grp_Operaciones.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pct_vehiculo1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pct_vehiculo2)).BeginInit();
             this.SuspendLayout();
             // 
             // pct_semaforo1
@@ -168,10 +170,10 @@ namespace Semaforo
             this.btn_iniciar.UseVisualStyleBackColor = false;
             this.btn_iniciar.Click += new System.EventHandler(this.btn_iniciar_Click);
             // 
-            // timer1
+            // timer_verde
             // 
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer_verde.Interval = 500;
+            this.timer_verde.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // lbl_contador
             // 
@@ -226,13 +228,25 @@ namespace Semaforo
             this.pct_vehiculo1.TabIndex = 7;
             this.pct_vehiculo1.TabStop = false;
             // 
+            // pct_vehiculo2
+            // 
+            this.pct_vehiculo2.BackColor = System.Drawing.Color.Transparent;
+            this.pct_vehiculo2.Image = ((System.Drawing.Image)(resources.GetObject("pct_vehiculo2.Image")));
+            this.pct_vehiculo2.Location = new System.Drawing.Point(328, 177);
+            this.pct_vehiculo2.Name = "pct_vehiculo2";
+            this.pct_vehiculo2.Size = new System.Drawing.Size(36, 90);
+            this.pct_vehiculo2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pct_vehiculo2.TabIndex = 8;
+            this.pct_vehiculo2.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(1072, 585);
+            this.ClientSize = new System.Drawing.Size(1072, 578);
+            this.Controls.Add(this.pct_vehiculo2);
             this.Controls.Add(this.pct_semaforo1);
             this.Controls.Add(this.pct_vehiculo1);
             this.Controls.Add(this.pictureBox1);
@@ -252,6 +266,7 @@ namespace Semaforo
             this.grp_Operaciones.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pct_vehiculo1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pct_vehiculo2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,7 +282,7 @@ namespace Semaforo
         private System.Windows.Forms.Button btn_apagar;
         private System.Windows.Forms.Button btn_parar;
         private System.Windows.Forms.Button btn_iniciar;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timer_verde;
         private System.Windows.Forms.Label lbl_contador;
         private System.Windows.Forms.Button btn_Preventivas;
         private System.Windows.Forms.Timer timer_preventivas;
@@ -276,6 +291,7 @@ namespace Semaforo
         private System.Windows.Forms.Timer timer_rojo;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pct_vehiculo1;
+        private System.Windows.Forms.PictureBox pct_vehiculo2;
     }
 }
 
